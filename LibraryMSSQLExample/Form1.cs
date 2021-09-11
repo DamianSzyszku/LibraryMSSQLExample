@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace LibraryMSSQLExample
 {
-    public partial class Form1 : Form
+    public partial class FormWelcome : Form
     {
-        public Form1()
+        public FormWelcome()
         {
             InitializeComponent();
         }
@@ -21,5 +21,30 @@ namespace LibraryMSSQLExample
         {
 
         }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void buttonSignIn_Click(object sender, EventArgs e)
+        {
+            string message = "Nie wprowadzono loginu lub hasła. Spróbuj ponownie";
+            string caption = "Wykryto błąd";
+            MessageBoxButtons buttons = MessageBoxButtons.OK;
+            DialogResult result;
+
+            // Displays the MessageBox.
+            if (textBoxLogin.Text.Equals("") || textBoxPassword.Text.Equals(""))
+            {
+                result = MessageBox.Show(message, caption, buttons);
+            }
+        }
     }
 }
+
