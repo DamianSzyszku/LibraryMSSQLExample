@@ -40,10 +40,11 @@ namespace LibraryMSSQLExample
             this.textBoxSearchQuery = new System.Windows.Forms.TextBox();
             this.listBoxSearchResult = new System.Windows.Forms.ListBox();
             this.buttonShowCart = new System.Windows.Forms.Button();
-            this.buttonAddToCart = new System.Windows.Forms.Button();
+            this.buttonGetBookInfo = new System.Windows.Forms.Button();
             this.labelBookCount = new System.Windows.Forms.Label();
             this.textBoxBookCount = new System.Windows.Forms.TextBox();
             this.labelBookCountEnding = new System.Windows.Forms.Label();
+            this.buttonConnect = new System.Windows.Forms.Button();
             this.panelAdministrator.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,6 +56,7 @@ namespace LibraryMSSQLExample
             this.buttonBookSearch.TabIndex = 1;
             this.buttonBookSearch.Text = "Szukaj";
             this.buttonBookSearch.UseVisualStyleBackColor = true;
+            this.buttonBookSearch.Click += new System.EventHandler(this.buttonBookSearch_Click);
             // 
             // buttonSignIn
             // 
@@ -141,21 +143,22 @@ namespace LibraryMSSQLExample
             // 
             // buttonShowCart
             // 
-            this.buttonShowCart.Location = new System.Drawing.Point(428, 183);
+            this.buttonShowCart.Location = new System.Drawing.Point(655, 175);
             this.buttonShowCart.Name = "buttonShowCart";
-            this.buttonShowCart.Size = new System.Drawing.Size(94, 29);
+            this.buttonShowCart.Size = new System.Drawing.Size(133, 65);
             this.buttonShowCart.TabIndex = 13;
             this.buttonShowCart.Text = "Koszyk";
             this.buttonShowCart.UseVisualStyleBackColor = true;
             // 
-            // buttonAddToCart
+            // buttonGetBookInfo
             // 
-            this.buttonAddToCart.Location = new System.Drawing.Point(428, 148);
-            this.buttonAddToCart.Name = "buttonAddToCart";
-            this.buttonAddToCart.Size = new System.Drawing.Size(146, 29);
-            this.buttonAddToCart.TabIndex = 14;
-            this.buttonAddToCart.Text = "Dodaj do koszyka";
-            this.buttonAddToCart.UseVisualStyleBackColor = true;
+            this.buttonGetBookInfo.Location = new System.Drawing.Point(428, 148);
+            this.buttonGetBookInfo.Name = "buttonGetBookInfo";
+            this.buttonGetBookInfo.Size = new System.Drawing.Size(146, 77);
+            this.buttonGetBookInfo.TabIndex = 14;
+            this.buttonGetBookInfo.Text = "Pełny rekord";
+            this.buttonGetBookInfo.UseVisualStyleBackColor = true;
+            this.buttonGetBookInfo.Click += new System.EventHandler(this.buttonGetBookInfo_Click);
             // 
             // labelBookCount
             // 
@@ -171,9 +174,11 @@ namespace LibraryMSSQLExample
             this.textBoxBookCount.Enabled = false;
             this.textBoxBookCount.Location = new System.Drawing.Point(401, 20);
             this.textBoxBookCount.Name = "textBoxBookCount";
+            this.textBoxBookCount.PlaceholderText = "0";
+            this.textBoxBookCount.ReadOnly = true;
+            this.textBoxBookCount.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.textBoxBookCount.Size = new System.Drawing.Size(55, 27);
             this.textBoxBookCount.TabIndex = 16;
-            this.textBoxBookCount.Text = "123123";
             // 
             // labelBookCountEnding
             // 
@@ -184,15 +189,26 @@ namespace LibraryMSSQLExample
             this.labelBookCountEnding.TabIndex = 17;
             this.labelBookCountEnding.Text = "książek.";
             // 
+            // buttonConnect
+            // 
+            this.buttonConnect.Location = new System.Drawing.Point(655, 70);
+            this.buttonConnect.Name = "buttonConnect";
+            this.buttonConnect.Size = new System.Drawing.Size(133, 72);
+            this.buttonConnect.TabIndex = 18;
+            this.buttonConnect.Text = "Połącz";
+            this.buttonConnect.UseVisualStyleBackColor = true;
+            this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
+            // 
             // FormWelcome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.buttonConnect);
             this.Controls.Add(this.labelBookCountEnding);
             this.Controls.Add(this.textBoxBookCount);
             this.Controls.Add(this.labelBookCount);
-            this.Controls.Add(this.buttonAddToCart);
+            this.Controls.Add(this.buttonGetBookInfo);
             this.Controls.Add(this.buttonShowCart);
             this.Controls.Add(this.listBoxSearchResult);
             this.Controls.Add(this.textBoxSearchQuery);
@@ -220,10 +236,11 @@ namespace LibraryMSSQLExample
         private System.Windows.Forms.TextBox textBoxSearchQuery;
         private System.Windows.Forms.ListBox listBoxSearchResult;
         private System.Windows.Forms.Button buttonShowCart;
-        private System.Windows.Forms.Button buttonAddToCart;
+        private System.Windows.Forms.Button buttonGetBookInfo;
         private System.Windows.Forms.Label labelBookCount;
         private System.Windows.Forms.TextBox textBoxBookCount;
         private System.Windows.Forms.Label labelBookCountEnding;
+        private System.Windows.Forms.Button buttonConnect;
     }
 }
 
