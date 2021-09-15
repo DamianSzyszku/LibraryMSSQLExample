@@ -31,6 +31,7 @@ namespace LibraryMSSQLExample
         {
             this.buttonAddToCart = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.tableRecordPanel = new System.Windows.Forms.TableLayoutPanel();
             this.SuspendLayout();
             // 
             // buttonAddToCart
@@ -53,11 +54,25 @@ namespace LibraryMSSQLExample
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.button1_Click);
             // 
+            // tableRecordPanel
+            // 
+            this.tableRecordPanel.ColumnCount = 2;
+            this.tableRecordPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableRecordPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableRecordPanel.Location = new System.Drawing.Point(49, 121);
+            this.tableRecordPanel.Name = "tableRecordPanel";
+            this.tableRecordPanel.RowCount = 2;
+            this.tableRecordPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableRecordPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableRecordPanel.Size = new System.Drawing.Size(250, 125);
+            this.tableRecordPanel.TabIndex = 2;
+            // 
             // FormRecord
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.tableRecordPanel);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonAddToCart);
             this.Name = "FormRecord";
@@ -70,5 +85,6 @@ namespace LibraryMSSQLExample
 
         private System.Windows.Forms.Button buttonAddToCart;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.TableLayoutPanel tableRecordPanel;
     }
 }

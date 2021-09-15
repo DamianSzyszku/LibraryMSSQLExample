@@ -10,22 +10,30 @@ namespace LibraryMSSQLExample
 {
     public partial class FormRecord : Form
     {
+        private Form CallingForm = null;
+        public FormRecord(Form callingForm) : this()
+        {
+            this.CallingForm = callingForm;
+        }
         public FormRecord()
         {
             InitializeComponent();
+            //tableRecordPanel.
         }
 
         private void buttonAddToCart_Click(object sender, EventArgs e)
         {
             
 
-            this.Hide();
+            this.Close();
+            this.CallingForm.Show();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
 
-            this.Hide();
+            this.Close();
+            this.CallingForm.Show();
         }
     }
 }

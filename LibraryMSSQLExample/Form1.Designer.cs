@@ -154,7 +154,7 @@ namespace LibraryMSSQLExample
             // 
             this.buttonGetBookInfo.Location = new System.Drawing.Point(428, 148);
             this.buttonGetBookInfo.Name = "buttonGetBookInfo";
-            this.buttonGetBookInfo.Size = new System.Drawing.Size(146, 77);
+            this.buttonGetBookInfo.Size = new System.Drawing.Size(146, 38);
             this.buttonGetBookInfo.TabIndex = 14;
             this.buttonGetBookInfo.Text = "Pełny rekord";
             this.buttonGetBookInfo.UseVisualStyleBackColor = true;
@@ -195,7 +195,7 @@ namespace LibraryMSSQLExample
             this.buttonConnect.Name = "buttonConnect";
             this.buttonConnect.Size = new System.Drawing.Size(133, 72);
             this.buttonConnect.TabIndex = 18;
-            this.buttonConnect.Text = "Połącz";
+            this.buttonConnect.Text = "Test połączenia z bazą";
             this.buttonConnect.UseVisualStyleBackColor = true;
             this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
             // 

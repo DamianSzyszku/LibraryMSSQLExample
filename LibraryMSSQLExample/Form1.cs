@@ -51,18 +51,21 @@ namespace LibraryMSSQLExample
             SqlDataReader dataReader;
             String sql, Output = "";
 
-            sql = "SELECT top 20 SalesOrderID,UnitPriceDiscount,ProductID FROM Sales.SalesOrderDetail";
+            sql = "select * from Person.EmailAddress";
             command = new SqlCommand(sql, cnn);
             dataReader = command.ExecuteReader();
             listBoxSearchResult.Items.Clear();
+            int counter = 0;
             while (dataReader.Read())
             {
-                listBoxSearchResult.Items.Add(dataReader.GetValue(0) + " - " + dataReader.GetValue(1) + " - " + dataReader.GetValue(2));
+                counter++;
+                //listBoxSearchResult.Items.Add(dataReader.GetValue(0) + " - " + dataReader.GetValue(1) + " - " + dataReader.GetValue(2));
             }
 
             dataReader.Close();
             command.Dispose();
             cnn.Close();
+            textBoxBookCount.Text = counter.ToString();
 
         }
 
@@ -99,7 +102,7 @@ namespace LibraryMSSQLExample
             cnn.Close();
 
             this.Hide();
-            var formRecord = new FormRecord();
+            var formRecord = new FormRecord(this);
             formRecord.ShowDialog();
 
 
