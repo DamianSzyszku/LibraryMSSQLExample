@@ -41,7 +41,6 @@ namespace LibraryMSSQLExample
             this.buttonShowCart = new System.Windows.Forms.Button();
             this.buttonGetBookInfo = new System.Windows.Forms.Button();
             this.labelBookCount = new System.Windows.Forms.Label();
-            this.buttonConnect = new System.Windows.Forms.Button();
             this.dataGridViewTest = new System.Windows.Forms.DataGridView();
             this.panelAdministrator.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTest)).BeginInit();
@@ -160,16 +159,6 @@ namespace LibraryMSSQLExample
             this.labelBookCount.Text = "W naszej bazie";
             this.labelBookCount.Visible = false;
             // 
-            // buttonConnect
-            // 
-            this.buttonConnect.Location = new System.Drawing.Point(1094, 25);
-            this.buttonConnect.Name = "buttonConnect";
-            this.buttonConnect.Size = new System.Drawing.Size(182, 117);
-            this.buttonConnect.TabIndex = 18;
-            this.buttonConnect.Text = "Połączenie z bazą";
-            this.buttonConnect.UseVisualStyleBackColor = true;
-            this.buttonConnect.Click += new System.EventHandler(this.buttonConnect_Click);
-            // 
             // dataGridViewTest
             // 
             this.dataGridViewTest.AllowUserToAddRows = false;
@@ -189,7 +178,6 @@ namespace LibraryMSSQLExample
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1299, 524);
             this.Controls.Add(this.dataGridViewTest);
-            this.Controls.Add(this.buttonConnect);
             this.Controls.Add(this.labelBookCount);
             this.Controls.Add(this.buttonGetBookInfo);
             this.Controls.Add(this.buttonShowCart);
@@ -220,7 +208,6 @@ namespace LibraryMSSQLExample
         private System.Windows.Forms.Button buttonShowCart;
         private System.Windows.Forms.Button buttonGetBookInfo;
         private System.Windows.Forms.Label labelBookCount;
-        private System.Windows.Forms.Button buttonConnect;
         private System.Windows.Forms.DataGridView dataGridViewTest;
     }
 }

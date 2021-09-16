@@ -8,7 +8,9 @@ namespace LibraryMSSQLExample
     {
         public FormWelcome()
         {
+
             InitializeComponent();
+            refreshRowCount();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -16,15 +18,6 @@ namespace LibraryMSSQLExample
 
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
 
         // Administration of database. Password and login required. Space not allowed
         private void buttonSignIn_Click(object sender, EventArgs e)
@@ -43,22 +36,27 @@ namespace LibraryMSSQLExample
             }
         }
 
-        // Button used to verify the connection to database. Later, put it in initialization code to make it automatic process.
-        private void buttonConnect_Click(object sender, EventArgs e)
+        private string MakeConnectionString(string SourceMachine, string DatabaseCatalog, string userID, string password)
+        {
+            string connectionString = @"Data Source=" + SourceMachine + ";Initial Catalog=" + DatabaseCatalog + ";User ID=" + userID + ";Password=" + password;
+            return connectionString;
+        }
+
+        // Refresh number of rows in table. Useful when adding next record or delete existing.
+        private void refreshRowCount()
         {
             // Login to database if succeed, active buttons.
-            string connectionString= @"Data Source=DESKTOP-6DASI9L;Initial Catalog=AdventureWorks2019;User ID=sa;Password=123";
-            SqlConnection cnn = new SqlConnection(connectionString);
+            SqlConnection cnn = new SqlConnection(MakeConnectionString("DESKTOP-6DASI9L", "AdventureWorks2019", "sa", "123"));
             cnn.Open();
-            MessageBox.Show("Connection open!");
+            //MessageBox.Show("Connection open!");
 
             SqlCommand command;
             SqlDataReader dataReader;
-            String sql, numberOfRecords = "";
+            String sqlQuery, numberOfRecords = "";
 
             // Count and assign number of records to numberOfRecords
-            sql = "select COUNT(*) from Person.EmailAddress;";
-            command = new SqlCommand(sql, cnn);
+            sqlQuery = "select COUNT(*) from Person.EmailAddress;";
+            command = new SqlCommand(sqlQuery, cnn);
             dataReader = command.ExecuteReader();
 
             while (dataReader.Read())
@@ -66,17 +64,17 @@ namespace LibraryMSSQLExample
                 numberOfRecords = numberOfRecords + dataReader.GetValue(0);
             }
             // Declination.
-            if (numberOfRecords.EndsWith('1') && numberOfRecords.Length==1 )
+            if (numberOfRecords.EndsWith('1') && numberOfRecords.Length == 1)
             {
-                labelBookCount.Text = labelBookCount.Text + " znajduje się " +  numberOfRecords + " książka.";
+                labelBookCount.Text = "W naszej bazie znajduje się " + numberOfRecords + " książka.";
             }
             else if (numberOfRecords.EndsWith('2') || numberOfRecords.EndsWith('3') || numberOfRecords.EndsWith('4'))
             {
-                labelBookCount.Text = labelBookCount.Text + " znajdują się " + numberOfRecords + " książki.";
+                labelBookCount.Text = "W naszej bazie znajdują się " + numberOfRecords + " książki.";
             }
             else
             {
-                labelBookCount.Text = labelBookCount.Text + "  znajduje się " + numberOfRecords + " książek.";
+                labelBookCount.Text = "W naszej bazie znajduje się " + numberOfRecords + " książek.";
             }
             labelBookCount.Visible = true;
 
@@ -87,12 +85,23 @@ namespace LibraryMSSQLExample
             cnn.Close();
 
 
+            cnn.Open();
+        }
 
+
+
+        private void buttonBookSearch_Click(object sender, EventArgs e)
+        {
+
+            SqlConnection cnn = new SqlConnection(MakeConnectionString("DESKTOP-6DASI9L", "AdventureWorks2019", "sa", "123"));
             cnn.Open();
 
-            sql = "select top 10 BusinessEntityID,EmailAddressID,EmailAddress from Person.EmailAddress";
-            command = new SqlCommand(sql, cnn);
-            
+            SqlCommand command;
+            string SearchString = textBoxSearchQuery.Text;
+
+            string sqlQuery = "select * from Person.EmailAddress where (EmailAddress like '%" + SearchString + "%');";
+            command = new SqlCommand(sqlQuery, cnn);
+
             SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
             DataTable table = new DataTable();
             dataAdapter.Fill(table);
@@ -100,29 +109,22 @@ namespace LibraryMSSQLExample
 
             command.Dispose();
             cnn.Close();
-            buttonConnect.Enabled = false;
 
-
-        }
-
-        private void buttonBookSearch_Click(object sender, EventArgs e)
-        {
 
         }
 
         private void buttonGetBookInfo_Click(object sender, EventArgs e)
         {
-            string connectionString = @"Data Source=DESKTOP-6DASI9L;Initial Catalog=AdventureWorks2019;User ID=sa;Password=123";
-            SqlConnection cnn = new SqlConnection(connectionString);
+            SqlConnection cnn = new SqlConnection(MakeConnectionString("DESKTOP-6DASI9L", "AdventureWorks2019", "sa", "123"));
             cnn.Open();
             MessageBox.Show("Connection open!");
 
             SqlCommand command;
             SqlDataReader dataReader;
-            String sql, numberOfRecords = "";
+            String sqlQuery;
 
-            sql = "SELECT * FROM Sales.SalesOrderDetail WHERE SalesOrderID=43659 AND SalesOrderDetailID=1";
-            command = new SqlCommand(sql, cnn);
+            sqlQuery = "SELECT * FROM Sales.SalesOrderDetail WHERE SalesOrderID=43659 AND SalesOrderDetailID=1";
+            command = new SqlCommand(sqlQuery, cnn);
             dataReader = command.ExecuteReader();
             DataTable schemaTable = new DataTable();
             schemaTable = dataReader.GetSchemaTable();
@@ -133,8 +135,7 @@ namespace LibraryMSSQLExample
                 //MessageBox.Show( col.ColumnName + "\n" +row[col.Ordinal]);
             }
 
-
-            if (dataGridViewTest.CurrentCell.Selected == false)
+            if (dataGridViewTest.CurrentCell == null)
             {
                 MessageBox.Show("wybierz komorke ktora chcesz dodac do koszyka wypozyczen");
             }
@@ -146,17 +147,10 @@ namespace LibraryMSSQLExample
             command.Dispose();
             cnn.Close();
 
-            //this.Hide();
-            //var formRecord = new FormRecord(this);
-            //formRecord.ShowDialog();
 
 
         }
 
-        private void labelBookCountEnding_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
 
