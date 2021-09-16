@@ -18,7 +18,7 @@ namespace LibraryMSSQLExample
         public FormRecord()
         {
             InitializeComponent();
-            //tableRecordPanel.
+            
         }
 
         private void buttonAddToCart_Click(object sender, EventArgs e)
