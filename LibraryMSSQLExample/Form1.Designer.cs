@@ -37,20 +37,24 @@ namespace LibraryMSSQLExample
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panelAdministrator = new System.Windows.Forms.Panel();
+            this.buttonLogout = new System.Windows.Forms.Button();
             this.textBoxSearchQuery = new System.Windows.Forms.TextBox();
             this.buttonShowCart = new System.Windows.Forms.Button();
             this.buttonGetBookInfo = new System.Windows.Forms.Button();
             this.labelBookCount = new System.Windows.Forms.Label();
             this.dataGridViewTest = new System.Windows.Forms.DataGridView();
+            this.buttonUpdate = new System.Windows.Forms.Button();
+            this.buttonAddRecord = new System.Windows.Forms.Button();
+            this.buttonDeleteRecord = new System.Windows.Forms.Button();
             this.panelAdministrator.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTest)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonBookSearch
             // 
-            this.buttonBookSearch.Location = new System.Drawing.Point(800, 25);
+            this.buttonBookSearch.Location = new System.Drawing.Point(766, 70);
             this.buttonBookSearch.Name = "buttonBookSearch";
-            this.buttonBookSearch.Size = new System.Drawing.Size(160, 117);
+            this.buttonBookSearch.Size = new System.Drawing.Size(160, 50);
             this.buttonBookSearch.TabIndex = 1;
             this.buttonBookSearch.Text = "Szukaj";
             this.buttonBookSearch.UseVisualStyleBackColor = true;
@@ -110,16 +114,27 @@ namespace LibraryMSSQLExample
             // 
             // panelAdministrator
             // 
+            this.panelAdministrator.Controls.Add(this.buttonLogout);
             this.panelAdministrator.Controls.Add(this.buttonSignIn);
             this.panelAdministrator.Controls.Add(this.label1);
             this.panelAdministrator.Controls.Add(this.textBoxLogin);
             this.panelAdministrator.Controls.Add(this.textBoxPassword);
             this.panelAdministrator.Controls.Add(this.labelLogin);
             this.panelAdministrator.Controls.Add(this.labelPassword);
-            this.panelAdministrator.Location = new System.Drawing.Point(916, 337);
+            this.panelAdministrator.Location = new System.Drawing.Point(857, 293);
             this.panelAdministrator.Name = "panelAdministrator";
-            this.panelAdministrator.Size = new System.Drawing.Size(360, 175);
+            this.panelAdministrator.Size = new System.Drawing.Size(360, 219);
             this.panelAdministrator.TabIndex = 10;
+            // 
+            // buttonLogout
+            // 
+            this.buttonLogout.Location = new System.Drawing.Point(206, 145);
+            this.buttonLogout.Name = "buttonLogout";
+            this.buttonLogout.Size = new System.Drawing.Size(131, 53);
+            this.buttonLogout.TabIndex = 10;
+            this.buttonLogout.Text = "Wyloguj";
+            this.buttonLogout.UseVisualStyleBackColor = true;
+            this.buttonLogout.Click += new System.EventHandler(this.buttonLogout_Click);
             // 
             // textBoxSearchQuery
             // 
@@ -131,18 +146,18 @@ namespace LibraryMSSQLExample
             // 
             // buttonShowCart
             // 
-            this.buttonShowCart.Location = new System.Drawing.Point(1094, 190);
+            this.buttonShowCart.Location = new System.Drawing.Point(1099, 70);
             this.buttonShowCart.Name = "buttonShowCart";
-            this.buttonShowCart.Size = new System.Drawing.Size(182, 102);
+            this.buttonShowCart.Size = new System.Drawing.Size(154, 83);
             this.buttonShowCart.TabIndex = 13;
             this.buttonShowCart.Text = "Koszyk";
             this.buttonShowCart.UseVisualStyleBackColor = true;
             // 
             // buttonGetBookInfo
             // 
-            this.buttonGetBookInfo.Location = new System.Drawing.Point(800, 209);
+            this.buttonGetBookInfo.Location = new System.Drawing.Point(766, 207);
             this.buttonGetBookInfo.Name = "buttonGetBookInfo";
-            this.buttonGetBookInfo.Size = new System.Drawing.Size(160, 83);
+            this.buttonGetBookInfo.Size = new System.Drawing.Size(160, 53);
             this.buttonGetBookInfo.TabIndex = 14;
             this.buttonGetBookInfo.Text = "Pełny rekord";
             this.buttonGetBookInfo.UseVisualStyleBackColor = true;
@@ -164,7 +179,7 @@ namespace LibraryMSSQLExample
             this.dataGridViewTest.AllowUserToAddRows = false;
             this.dataGridViewTest.AllowUserToDeleteRows = false;
             this.dataGridViewTest.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewTest.Location = new System.Drawing.Point(17, 148);
+            this.dataGridViewTest.Location = new System.Drawing.Point(17, 103);
             this.dataGridViewTest.Name = "dataGridViewTest";
             this.dataGridViewTest.ReadOnly = true;
             this.dataGridViewTest.RowHeadersWidth = 51;
@@ -172,11 +187,48 @@ namespace LibraryMSSQLExample
             this.dataGridViewTest.Size = new System.Drawing.Size(733, 273);
             this.dataGridViewTest.TabIndex = 19;
             // 
+            // buttonUpdate
+            // 
+            this.buttonUpdate.Enabled = false;
+            this.buttonUpdate.Location = new System.Drawing.Point(98, 404);
+            this.buttonUpdate.Name = "buttonUpdate";
+            this.buttonUpdate.Size = new System.Drawing.Size(178, 55);
+            this.buttonUpdate.TabIndex = 20;
+            this.buttonUpdate.Text = "Aktualizuj rekord";
+            this.buttonUpdate.UseVisualStyleBackColor = true;
+            this.buttonUpdate.Visible = false;
+            // 
+            // buttonAddRecord
+            // 
+            this.buttonAddRecord.Enabled = false;
+            this.buttonAddRecord.Location = new System.Drawing.Point(282, 404);
+            this.buttonAddRecord.Name = "buttonAddRecord";
+            this.buttonAddRecord.Size = new System.Drawing.Size(178, 55);
+            this.buttonAddRecord.TabIndex = 21;
+            this.buttonAddRecord.Text = "Dodaj rekord";
+            this.buttonAddRecord.UseVisualStyleBackColor = true;
+            this.buttonAddRecord.Visible = false;
+            // 
+            // buttonDeleteRecord
+            // 
+            this.buttonDeleteRecord.Enabled = false;
+            this.buttonDeleteRecord.Location = new System.Drawing.Point(466, 404);
+            this.buttonDeleteRecord.Name = "buttonDeleteRecord";
+            this.buttonDeleteRecord.Size = new System.Drawing.Size(178, 55);
+            this.buttonDeleteRecord.TabIndex = 22;
+            this.buttonDeleteRecord.Text = "Usuń rekord";
+            this.buttonDeleteRecord.UseVisualStyleBackColor = true;
+            this.buttonDeleteRecord.Visible = false;
+            this.buttonDeleteRecord.Click += new System.EventHandler(this.buttonDeleteRecord_Click);
+            // 
             // FormWelcome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1299, 524);
+            this.Controls.Add(this.buttonDeleteRecord);
+            this.Controls.Add(this.buttonAddRecord);
+            this.Controls.Add(this.buttonUpdate);
             this.Controls.Add(this.dataGridViewTest);
             this.Controls.Add(this.labelBookCount);
             this.Controls.Add(this.buttonGetBookInfo);
@@ -209,6 +261,10 @@ namespace LibraryMSSQLExample
         private System.Windows.Forms.Button buttonGetBookInfo;
         private System.Windows.Forms.Label labelBookCount;
         private System.Windows.Forms.DataGridView dataGridViewTest;
+        private System.Windows.Forms.Button buttonUpdate;
+        private System.Windows.Forms.Button buttonAddRecord;
+        private System.Windows.Forms.Button buttonDeleteRecord;
+        private System.Windows.Forms.Button buttonLogout;
     }
 }
 

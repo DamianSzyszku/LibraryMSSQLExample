@@ -34,6 +34,23 @@ namespace LibraryMSSQLExample
                 textBoxLogin.Text = "";
                 textBoxPassword.Text = "";
             }
+            else if (textBoxLogin.Text.Equals("root") || textBoxPassword.Text.Equals("root"))
+            {
+                buttonAddRecord.Visible = true;
+                buttonAddRecord.Enabled = true;
+                buttonDeleteRecord.Visible = true;
+                buttonDeleteRecord.Enabled = true;
+                buttonUpdate.Visible = true;
+                buttonUpdate.Enabled = true;
+                buttonLogout.Enabled = true;
+                textBoxLogin.Enabled = false;
+                textBoxPassword.Enabled = false;
+                buttonSignIn.Enabled = false;
+                buttonLogout.Enabled = true;
+                buttonLogout.Visible = true;
+
+
+            }
         }
 
         private string MakeConnectionString(string SourceMachine, string DatabaseCatalog, string userID, string password)
@@ -151,6 +168,78 @@ namespace LibraryMSSQLExample
 
         }
 
+        private void buttonLogout_Click(object sender, EventArgs e)
+        {
+
+            buttonAddRecord.Visible = false;
+            buttonAddRecord.Enabled = false;
+            buttonDeleteRecord.Visible = false;
+            buttonDeleteRecord.Enabled = false;
+            buttonUpdate.Visible = false;
+            buttonUpdate.Enabled = false;
+            textBoxLogin.Enabled = true;
+            textBoxPassword.Enabled = true;
+            buttonSignIn.Enabled = true;
+            buttonLogout.Enabled = false;
+            buttonLogout.Visible = false;
+
+        }
+
+        private void buttonDeleteRecord_Click(object sender, EventArgs e)
+        {
+            if (dataGridViewTest.CurrentCell == null)
+            {
+                MessageBox.Show("Wyszukaj rekord a następnie go zaznacz");
+            }
+            else
+            {
+                int rowIndex = dataGridViewTest.CurrentCell.RowIndex;
+                string sqlQuery="", columnName, columnValue;
+
+                //for (int i = 0; i < dataGridViewTest.CurrentRow.Cells.Count; i++)
+                for (int i = 0; i < 3; i++)
+                    {
+                    columnValue = dataGridViewTest.Rows[rowIndex].Cells[i].Value.ToString();
+                    columnName = dataGridViewTest.Columns[i].Name.ToString();
+                    //if (i == dataGridViewTest.CurrentRow.Cells.Count - 1)
+                    if (i == 2)
+                            sqlQuery = sqlQuery + columnName + "='" + columnValue + "'";
+                    else
+                        sqlQuery = sqlQuery + columnName + "='" + columnValue + "' and ";
+
+                }
+                MessageBox.Show(sqlQuery) ;
+
+                SqlConnection cnn = new SqlConnection(MakeConnectionString("DESKTOP-6DASI9L", "AdventureWorks2019", "sa", "123"));
+                cnn.Open();
+                sqlQuery = "select * from Person.EmailAddress where (" + sqlQuery + ");";
+                //sqlDeleteQuery = "Delete from Person.EmailAddress where (" + sqlQuery + ");";
+                
+                SqlCommand command;
+                command = new SqlCommand(sqlQuery, cnn);
+                SqlDataReader dataReader = command.ExecuteReader();
+                int counter = 0;
+                while (dataReader.Read())
+                {
+                    counter++;
+                }
+                if (counter == 1)
+                {
+
+                    MessageBox.Show("Usunięto rekord. Aktualizacja listy");
+                    dataGridViewTest.Rows.Remove(dataGridViewTest.Rows[rowIndex]);
+                }
+                else
+                {
+                    MessageBox.Show("Znaleziono więcej niż jeden rekord.");
+                }
+
+                command.Dispose();
+                cnn.Close();
+
+
+            }
+        }
     }
 }
 
