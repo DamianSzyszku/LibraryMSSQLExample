@@ -40,19 +40,20 @@ namespace LibraryMSSQLExample
             this.buttonLogout = new System.Windows.Forms.Button();
             this.textBoxSearchQuery = new System.Windows.Forms.TextBox();
             this.buttonShowCart = new System.Windows.Forms.Button();
-            this.buttonGetBookInfo = new System.Windows.Forms.Button();
+            this.buttonAddToCart = new System.Windows.Forms.Button();
             this.labelBookCount = new System.Windows.Forms.Label();
             this.dataGridViewTest = new System.Windows.Forms.DataGridView();
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.buttonAddRecord = new System.Windows.Forms.Button();
             this.buttonDeleteRecord = new System.Windows.Forms.Button();
+            this.buttonCartManagement = new System.Windows.Forms.Button();
             this.panelAdministrator.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTest)).BeginInit();
             this.SuspendLayout();
             // 
             // buttonBookSearch
             // 
-            this.buttonBookSearch.Location = new System.Drawing.Point(766, 70);
+            this.buttonBookSearch.Location = new System.Drawing.Point(766, 86);
             this.buttonBookSearch.Name = "buttonBookSearch";
             this.buttonBookSearch.Size = new System.Drawing.Size(160, 50);
             this.buttonBookSearch.TabIndex = 1;
@@ -128,12 +129,14 @@ namespace LibraryMSSQLExample
             // 
             // buttonLogout
             // 
+            this.buttonLogout.Enabled = false;
             this.buttonLogout.Location = new System.Drawing.Point(206, 145);
             this.buttonLogout.Name = "buttonLogout";
             this.buttonLogout.Size = new System.Drawing.Size(131, 53);
             this.buttonLogout.TabIndex = 10;
             this.buttonLogout.Text = "Wyloguj";
             this.buttonLogout.UseVisualStyleBackColor = true;
+            this.buttonLogout.Visible = false;
             this.buttonLogout.Click += new System.EventHandler(this.buttonLogout_Click);
             // 
             // textBoxSearchQuery
@@ -152,16 +155,17 @@ namespace LibraryMSSQLExample
             this.buttonShowCart.TabIndex = 13;
             this.buttonShowCart.Text = "Koszyk";
             this.buttonShowCart.UseVisualStyleBackColor = true;
+            this.buttonShowCart.Click += new System.EventHandler(this.buttonShowCart_Click);
             // 
-            // buttonGetBookInfo
+            // buttonAddToCart
             // 
-            this.buttonGetBookInfo.Location = new System.Drawing.Point(766, 207);
-            this.buttonGetBookInfo.Name = "buttonGetBookInfo";
-            this.buttonGetBookInfo.Size = new System.Drawing.Size(160, 53);
-            this.buttonGetBookInfo.TabIndex = 14;
-            this.buttonGetBookInfo.Text = "Pełny rekord";
-            this.buttonGetBookInfo.UseVisualStyleBackColor = true;
-            this.buttonGetBookInfo.Click += new System.EventHandler(this.buttonGetBookInfo_Click);
+            this.buttonAddToCart.Location = new System.Drawing.Point(766, 193);
+            this.buttonAddToCart.Name = "buttonAddToCart";
+            this.buttonAddToCart.Size = new System.Drawing.Size(160, 50);
+            this.buttonAddToCart.TabIndex = 14;
+            this.buttonAddToCart.Text = "Dodaj do koszyka";
+            this.buttonAddToCart.UseVisualStyleBackColor = true;
+            this.buttonAddToCart.Click += new System.EventHandler(this.buttonAddToCart_Click);
             // 
             // labelBookCount
             // 
@@ -221,17 +225,29 @@ namespace LibraryMSSQLExample
             this.buttonDeleteRecord.Visible = false;
             this.buttonDeleteRecord.Click += new System.EventHandler(this.buttonDeleteRecord_Click);
             // 
+            // buttonCartManagement
+            // 
+            this.buttonCartManagement.Enabled = false;
+            this.buttonCartManagement.Location = new System.Drawing.Point(1099, 177);
+            this.buttonCartManagement.Name = "buttonCartManagement";
+            this.buttonCartManagement.Size = new System.Drawing.Size(154, 83);
+            this.buttonCartManagement.TabIndex = 23;
+            this.buttonCartManagement.Text = "Administracja rezerwacjami";
+            this.buttonCartManagement.UseVisualStyleBackColor = true;
+            this.buttonCartManagement.Visible = false;
+            // 
             // FormWelcome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1299, 524);
+            this.Controls.Add(this.buttonCartManagement);
             this.Controls.Add(this.buttonDeleteRecord);
             this.Controls.Add(this.buttonAddRecord);
             this.Controls.Add(this.buttonUpdate);
             this.Controls.Add(this.dataGridViewTest);
             this.Controls.Add(this.labelBookCount);
-            this.Controls.Add(this.buttonGetBookInfo);
+            this.Controls.Add(this.buttonAddToCart);
             this.Controls.Add(this.buttonShowCart);
             this.Controls.Add(this.textBoxSearchQuery);
             this.Controls.Add(this.panelAdministrator);
@@ -258,13 +274,14 @@ namespace LibraryMSSQLExample
         private System.Windows.Forms.Panel panelAdministrator;
         private System.Windows.Forms.TextBox textBoxSearchQuery;
         private System.Windows.Forms.Button buttonShowCart;
-        private System.Windows.Forms.Button buttonGetBookInfo;
+        private System.Windows.Forms.Button buttonAddToCart;
         private System.Windows.Forms.Label labelBookCount;
         private System.Windows.Forms.DataGridView dataGridViewTest;
         private System.Windows.Forms.Button buttonUpdate;
         private System.Windows.Forms.Button buttonAddRecord;
         private System.Windows.Forms.Button buttonDeleteRecord;
         private System.Windows.Forms.Button buttonLogout;
+        private System.Windows.Forms.Button buttonCartManagement;
     }
 }
 

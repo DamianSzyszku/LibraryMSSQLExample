@@ -6,11 +6,29 @@ namespace LibraryMSSQLExample
 {
     public partial class FormWelcome : Form
     {
+
         public FormWelcome()
         {
 
             InitializeComponent();
             refreshRowCount();
+            MakeCartTable();
+        }
+
+        private void MakeCartTable()
+        {
+
+            SqlConnection cnn = new SqlConnection(MakeConnectionString("DESKTOP-6DASI9L", "AdventureWorks2019", "sa", "123"));
+            cnn.Open();
+
+            SqlCommand command;
+
+            string sqlQuery = "select * from Person.EmailAddress where (EmailAddress like '%michael12%');";
+            command = new SqlCommand(sqlQuery, cnn);
+
+            SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+            DataTable table = new DataTable();
+            dataAdapter.Fill(table);
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -48,6 +66,9 @@ namespace LibraryMSSQLExample
                 buttonSignIn.Enabled = false;
                 buttonLogout.Enabled = true;
                 buttonLogout.Visible = true;
+                buttonCartManagement.Visible = true;
+                buttonCartManagement.Enabled = true;
+
 
 
             }
@@ -130,27 +151,9 @@ namespace LibraryMSSQLExample
 
         }
 
-        private void buttonGetBookInfo_Click(object sender, EventArgs e)
+        private void buttonAddToCart_Click(object sender, EventArgs e)
         {
-            SqlConnection cnn = new SqlConnection(MakeConnectionString("DESKTOP-6DASI9L", "AdventureWorks2019", "sa", "123"));
-            cnn.Open();
-            MessageBox.Show("Connection open!");
 
-            SqlCommand command;
-            SqlDataReader dataReader;
-            String sqlQuery;
-
-            sqlQuery = "SELECT * FROM Sales.SalesOrderDetail WHERE SalesOrderID=43659 AND SalesOrderDetailID=1";
-            command = new SqlCommand(sqlQuery, cnn);
-            dataReader = command.ExecuteReader();
-            DataTable schemaTable = new DataTable();
-            schemaTable = dataReader.GetSchemaTable();
-            int ordinal = 1;
-            DataRow row = schemaTable.Rows[ordinal];
-            foreach (DataColumn col in schemaTable.Columns)
-            {
-                //MessageBox.Show( col.ColumnName + "\n" +row[col.Ordinal]);
-            }
 
             if (dataGridViewTest.CurrentCell == null)
             {
@@ -160,9 +163,6 @@ namespace LibraryMSSQLExample
             {
                 MessageBox.Show(dataGridViewTest.CurrentCell.RowIndex.ToString());
             }
-            dataReader.Close();
-            command.Dispose();
-            cnn.Close();
 
 
 
@@ -182,6 +182,8 @@ namespace LibraryMSSQLExample
             buttonSignIn.Enabled = true;
             buttonLogout.Enabled = false;
             buttonLogout.Visible = false;
+            buttonCartManagement.Visible = false;
+            buttonCartManagement.Enabled = false;
 
         }
 
@@ -239,6 +241,14 @@ namespace LibraryMSSQLExample
 
 
             }
+        }
+
+        private void buttonShowCart_Click(object sender, EventArgs e)
+        {
+
+            this.Hide();
+            var formCart = new FormCart(this);
+            formCart.ShowDialog();
         }
     }
 }
