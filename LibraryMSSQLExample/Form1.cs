@@ -6,7 +6,16 @@ namespace LibraryMSSQLExample
 {
     public partial class FormWelcome : Form
     {
+        static class Global
+        {
+            private static DataTable _globalVar = new DataTable();
 
+            public static DataTable CartTable
+            {
+                get { return _globalVar; }
+                set { _globalVar = value; }
+            }
+        }
         public FormWelcome()
         {
 
@@ -15,7 +24,7 @@ namespace LibraryMSSQLExample
             MakeCartTable();
         }
 
-        private void MakeCartTable()
+        public void MakeCartTable()
         {
 
             SqlConnection cnn = new SqlConnection(MakeConnectionString("DESKTOP-6DASI9L", "AdventureWorks2019", "sa", "123"));
@@ -27,13 +36,21 @@ namespace LibraryMSSQLExample
             command = new SqlCommand(sqlQuery, cnn);
 
             SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-            DataTable table = new DataTable();
-            dataAdapter.Fill(table);
+            //DataTable CartTable = new DataTable();
+            
+            dataAdapter.Fill(Global.CartTable);
+            Global.CartTable.Rows[0].Delete();
+
+
+            //dataGridViewTest.DataSource = new BindingSource(Global.CartTable, null);
+            command.Dispose();
+            cnn.Close();
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-
+            
         }
 
 
@@ -161,7 +178,39 @@ namespace LibraryMSSQLExample
             }
             else
             {
-                MessageBox.Show(dataGridViewTest.CurrentCell.RowIndex.ToString());
+
+                if (Global.CartTable.Rows.Count == 5)
+                {
+                    MessageBox.Show("Maksymalna liczba wypożyczeń to 5.");
+                    dataGridViewTest.DataSource = new BindingSource(Global.CartTable, null);
+                }
+                else
+                {
+                    bool CartFlag = false;
+                    int index = dataGridViewTest.CurrentCell.RowIndex;
+                    DataRow row = Global.CartTable.NewRow();
+                    row = (((DataRowView)dataGridViewTest.Rows[index].DataBoundItem).Row);
+                    for (int j = 1; j < Global.CartTable.Rows.Count; j++)
+                    {
+                        // numeration begins with 1, why?
+                        // condition is not fulfilled, why?
+                        if (Global.CartTable.Rows[j].ItemArray.Equals(row.ItemArray))
+                        {
+                            MessageBox.Show("Powtórzony rekord");
+                            CartFlag = true;
+                            break;
+                        }
+                    }
+
+
+                    if (CartFlag == false)
+                    {
+                        Global.CartTable.ImportRow(row);
+
+                        dataGridViewTest.DataSource = new BindingSource(Global.CartTable, null);
+                    }
+                }
+
             }
 
 
@@ -259,10 +308,6 @@ namespace LibraryMSSQLExample
             formAddBorrower.ShowDialog();
         }
 
-        private void buttonAddBook_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
 

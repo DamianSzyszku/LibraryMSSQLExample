@@ -48,7 +48,6 @@ namespace LibraryMSSQLExample
             this.buttonDeleteRecord = new System.Windows.Forms.Button();
             this.buttonCartManagement = new System.Windows.Forms.Button();
             this.buttonAddBorrower = new System.Windows.Forms.Button();
-            this.buttonAddBook = new System.Windows.Forms.Button();
             this.panelAdministrator.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTest)).BeginInit();
             this.SuspendLayout();
@@ -248,22 +247,11 @@ namespace LibraryMSSQLExample
             this.buttonAddBorrower.UseVisualStyleBackColor = true;
             this.buttonAddBorrower.Click += new System.EventHandler(this.buttonAddBorrower_Click);
             // 
-            // buttonAddBook
-            // 
-            this.buttonAddBook.Location = new System.Drawing.Point(1133, 371);
-            this.buttonAddBook.Name = "buttonAddBook";
-            this.buttonAddBook.Size = new System.Drawing.Size(153, 57);
-            this.buttonAddBook.TabIndex = 25;
-            this.buttonAddBook.Text = "Dodaj książkę";
-            this.buttonAddBook.UseVisualStyleBackColor = true;
-            this.buttonAddBook.Click += new System.EventHandler(this.buttonAddBook_Click);
-            // 
             // FormWelcome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1299, 524);
-            this.Controls.Add(this.buttonAddBook);
             this.Controls.Add(this.buttonAddBorrower);
             this.Controls.Add(this.buttonCartManagement);
             this.Controls.Add(this.buttonDeleteRecord);
@@ -307,7 +295,6 @@ namespace LibraryMSSQLExample
         private System.Windows.Forms.Button buttonLogout;
         private System.Windows.Forms.Button buttonCartManagement;
         private System.Windows.Forms.Button buttonAddBorrower;
-        private System.Windows.Forms.Button buttonAddBook;
     }
 }
 
