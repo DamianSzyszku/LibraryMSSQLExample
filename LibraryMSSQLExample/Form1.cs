@@ -250,6 +250,19 @@ namespace LibraryMSSQLExample
             var formCart = new FormCart(this);
             formCart.ShowDialog();
         }
+
+        private void buttonAddBorrower_Click(object sender, EventArgs e)
+        {
+
+            this.Hide();
+            var formAddBorrower = new FormAddBorrower(this);
+            formAddBorrower.ShowDialog();
+        }
+
+        private void buttonAddBook_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
 

@@ -42,6 +42,7 @@ namespace LibraryMSSQLExample
             }
             else 
             { 
+                // sprawdz czy uzytkownik istnieje, jezeli tak, to dokonaj rezerwacji
 
             }
         }

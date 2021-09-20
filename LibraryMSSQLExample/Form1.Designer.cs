@@ -47,6 +47,8 @@ namespace LibraryMSSQLExample
             this.buttonAddRecord = new System.Windows.Forms.Button();
             this.buttonDeleteRecord = new System.Windows.Forms.Button();
             this.buttonCartManagement = new System.Windows.Forms.Button();
+            this.buttonAddBorrower = new System.Windows.Forms.Button();
+            this.buttonAddBook = new System.Windows.Forms.Button();
             this.panelAdministrator.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTest)).BeginInit();
             this.SuspendLayout();
@@ -122,7 +124,7 @@ namespace LibraryMSSQLExample
             this.panelAdministrator.Controls.Add(this.textBoxPassword);
             this.panelAdministrator.Controls.Add(this.labelLogin);
             this.panelAdministrator.Controls.Add(this.labelPassword);
-            this.panelAdministrator.Location = new System.Drawing.Point(857, 293);
+            this.panelAdministrator.Location = new System.Drawing.Point(766, 293);
             this.panelAdministrator.Name = "panelAdministrator";
             this.panelAdministrator.Size = new System.Drawing.Size(360, 219);
             this.panelAdministrator.TabIndex = 10;
@@ -228,19 +230,41 @@ namespace LibraryMSSQLExample
             // buttonCartManagement
             // 
             this.buttonCartManagement.Enabled = false;
-            this.buttonCartManagement.Location = new System.Drawing.Point(1099, 177);
+            this.buttonCartManagement.Location = new System.Drawing.Point(1133, 293);
             this.buttonCartManagement.Name = "buttonCartManagement";
-            this.buttonCartManagement.Size = new System.Drawing.Size(154, 83);
+            this.buttonCartManagement.Size = new System.Drawing.Size(154, 57);
             this.buttonCartManagement.TabIndex = 23;
             this.buttonCartManagement.Text = "Administracja rezerwacjami";
             this.buttonCartManagement.UseVisualStyleBackColor = true;
             this.buttonCartManagement.Visible = false;
+            // 
+            // buttonAddBorrower
+            // 
+            this.buttonAddBorrower.Location = new System.Drawing.Point(1132, 455);
+            this.buttonAddBorrower.Name = "buttonAddBorrower";
+            this.buttonAddBorrower.Size = new System.Drawing.Size(154, 57);
+            this.buttonAddBorrower.TabIndex = 24;
+            this.buttonAddBorrower.Text = "Dodaj użytkownika";
+            this.buttonAddBorrower.UseVisualStyleBackColor = true;
+            this.buttonAddBorrower.Click += new System.EventHandler(this.buttonAddBorrower_Click);
+            // 
+            // buttonAddBook
+            // 
+            this.buttonAddBook.Location = new System.Drawing.Point(1133, 371);
+            this.buttonAddBook.Name = "buttonAddBook";
+            this.buttonAddBook.Size = new System.Drawing.Size(153, 57);
+            this.buttonAddBook.TabIndex = 25;
+            this.buttonAddBook.Text = "Dodaj książkę";
+            this.buttonAddBook.UseVisualStyleBackColor = true;
+            this.buttonAddBook.Click += new System.EventHandler(this.buttonAddBook_Click);
             // 
             // FormWelcome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1299, 524);
+            this.Controls.Add(this.buttonAddBook);
+            this.Controls.Add(this.buttonAddBorrower);
             this.Controls.Add(this.buttonCartManagement);
             this.Controls.Add(this.buttonDeleteRecord);
             this.Controls.Add(this.buttonAddRecord);
@@ -282,6 +306,8 @@ namespace LibraryMSSQLExample
         private System.Windows.Forms.Button buttonDeleteRecord;
         private System.Windows.Forms.Button buttonLogout;
         private System.Windows.Forms.Button buttonCartManagement;
+        private System.Windows.Forms.Button buttonAddBorrower;
+        private System.Windows.Forms.Button buttonAddBook;
     }
 }
 
