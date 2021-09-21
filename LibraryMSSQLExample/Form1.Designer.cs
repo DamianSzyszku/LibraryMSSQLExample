@@ -239,12 +239,14 @@ namespace LibraryMSSQLExample
             // 
             // buttonAddBorrower
             // 
+            this.buttonAddBorrower.Enabled = false;
             this.buttonAddBorrower.Location = new System.Drawing.Point(1132, 455);
             this.buttonAddBorrower.Name = "buttonAddBorrower";
             this.buttonAddBorrower.Size = new System.Drawing.Size(154, 57);
             this.buttonAddBorrower.TabIndex = 24;
             this.buttonAddBorrower.Text = "Dodaj użytkownika";
             this.buttonAddBorrower.UseVisualStyleBackColor = true;
+            this.buttonAddBorrower.Visible = false;
             this.buttonAddBorrower.Click += new System.EventHandler(this.buttonAddBorrower_Click);
             // 
             // FormWelcome

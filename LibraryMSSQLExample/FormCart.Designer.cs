@@ -50,9 +50,12 @@ namespace LibraryMSSQLExample
             // 
             // dataGridViewCart
             // 
+            this.dataGridViewCart.AllowUserToAddRows = false;
+            this.dataGridViewCart.AllowUserToDeleteRows = false;
             this.dataGridViewCart.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewCart.Location = new System.Drawing.Point(26, 29);
             this.dataGridViewCart.Name = "dataGridViewCart";
+            this.dataGridViewCart.ReadOnly = true;
             this.dataGridViewCart.RowHeadersWidth = 51;
             this.dataGridViewCart.RowTemplate.Height = 29;
             this.dataGridViewCart.Size = new System.Drawing.Size(735, 182);

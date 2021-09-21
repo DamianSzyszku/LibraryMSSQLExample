@@ -12,9 +12,12 @@ namespace LibraryMSSQLExample
     {
 
         private Form CallingForm = null;
-        public FormCart(Form callingForm) : this()
+        private DataTable CartTable = null;
+        public FormCart(Form callingForm, DataTable cartTable) : this()
         {
             this.CallingForm = callingForm;
+            this.CartTable = cartTable;
+            dataGridViewCart.DataSource = new BindingSource(this.CartTable, null);
         }
         public FormCart()
         {
@@ -23,7 +26,6 @@ namespace LibraryMSSQLExample
 
         private void buttonBack_Click(object sender, EventArgs e)
         {
-
             this.Close();
             this.CallingForm.Show();
         }
@@ -53,9 +55,13 @@ namespace LibraryMSSQLExample
             {
                 MessageBox.Show("Proszę dodać element do koszyka");
             }
-            else if ( true )
+            else
             {
-
+                int index = dataGridViewCart.CurrentCell.RowIndex;
+                dataGridViewCart.Rows.Remove(dataGridViewCart.Rows[index]);
+                this.CartTable.Rows[index].Delete();
+                this.CartTable.AcceptChanges();
+                dataGridViewCart.DataSource = new BindingSource(this.CartTable, null);
             }
         }
     }

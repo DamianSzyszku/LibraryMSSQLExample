@@ -8,26 +8,35 @@ namespace LibraryMSSQLExample
     {
         static class Global
         {
-            private static DataTable _globalVar = new DataTable();
-
+            // Global data table, required when calling cart form.
+            private static DataTable globalTable = new DataTable();
             public static DataTable CartTable
             {
-                get { return _globalVar; }
-                set { _globalVar = value; }
+                get { return globalTable; }
+                set { globalTable = value; }
             }
+
+            // Database credentials
+            public static string dbMachine = "DESKTOP-6DASI9L";
+            public static string dbName = "AdventureWorks2019";
+            public static string dbLogin = "sa";
+            public static string dbPass = "123";
+
+
         }
+
         public FormWelcome()
         {
-
             InitializeComponent();
             refreshRowCount();
             MakeCartTable();
         }
 
+        // Initialize global CartTable using sql query. 
         public void MakeCartTable()
         {
 
-            SqlConnection cnn = new SqlConnection(MakeConnectionString("DESKTOP-6DASI9L", "AdventureWorks2019", "sa", "123"));
+            SqlConnection cnn = new SqlConnection(MakeConnectionString(Global.dbMachine, Global.dbName, Global.dbLogin, Global.dbPass));
             cnn.Open();
 
             SqlCommand command;
@@ -36,13 +45,11 @@ namespace LibraryMSSQLExample
             command = new SqlCommand(sqlQuery, cnn);
 
             SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-            //DataTable CartTable = new DataTable();
             
             dataAdapter.Fill(Global.CartTable);
             Global.CartTable.Rows[0].Delete();
+            Global.CartTable.AcceptChanges();
 
-
-            //dataGridViewTest.DataSource = new BindingSource(Global.CartTable, null);
             command.Dispose();
             cnn.Close();
 
@@ -58,14 +65,10 @@ namespace LibraryMSSQLExample
         private void buttonSignIn_Click(object sender, EventArgs e)
         {
             string message = "Wystąpił błąd logowania. Spróbuj ponownie. \n Możliwe przyczyny to brak loginu lub hasła lub niedozwolone znaki.";
-            string caption = "Wykryto błąd";
-            MessageBoxButtons buttons = MessageBoxButtons.OK;
-            DialogResult result;
-
-            // Displays the MessageBox.
+            
             if (textBoxLogin.Text.Equals("") || textBoxPassword.Text.Equals("") || textBoxLogin.Text.Contains(" ") || textBoxPassword.Text.Contains(" "))
             {
-                result = MessageBox.Show(message, caption, buttons);
+                MessageBox.Show(message);
                 textBoxLogin.Text = "";
                 textBoxPassword.Text = "";
             }
@@ -85,9 +88,8 @@ namespace LibraryMSSQLExample
                 buttonLogout.Visible = true;
                 buttonCartManagement.Visible = true;
                 buttonCartManagement.Enabled = true;
-
-
-
+                buttonAddBorrower.Visible = true;
+                buttonAddBorrower.Enabled = true;
             }
         }
 
@@ -101,7 +103,7 @@ namespace LibraryMSSQLExample
         private void refreshRowCount()
         {
             // Login to database if succeed, active buttons.
-            SqlConnection cnn = new SqlConnection(MakeConnectionString("DESKTOP-6DASI9L", "AdventureWorks2019", "sa", "123"));
+            SqlConnection cnn = new SqlConnection(MakeConnectionString(Global.dbMachine, Global.dbName, Global.dbLogin, Global.dbPass));
             cnn.Open();
             //MessageBox.Show("Connection open!");
 
@@ -148,7 +150,7 @@ namespace LibraryMSSQLExample
         private void buttonBookSearch_Click(object sender, EventArgs e)
         {
 
-            SqlConnection cnn = new SqlConnection(MakeConnectionString("DESKTOP-6DASI9L", "AdventureWorks2019", "sa", "123"));
+            SqlConnection cnn = new SqlConnection(MakeConnectionString(Global.dbMachine, Global.dbName, Global.dbLogin, Global.dbPass));
             cnn.Open();
 
             SqlCommand command;
@@ -178,7 +180,6 @@ namespace LibraryMSSQLExample
             }
             else
             {
-
                 if (Global.CartTable.Rows.Count == 5)
                 {
                     MessageBox.Show("Maksymalna liczba wypożyczeń to 5.");
@@ -193,16 +194,13 @@ namespace LibraryMSSQLExample
                     for (int j = 1; j < Global.CartTable.Rows.Count; j++)
                     {
                         // numeration begins with 1, why?
-                        // condition is not fulfilled, why?
-                        if (Global.CartTable.Rows[j].ItemArray.Equals(row.ItemArray))
+                        if (Global.CartTable.Rows[j].ItemArray[3].Equals(row.ItemArray[3]))
                         {
-                            MessageBox.Show("Powtórzony rekord");
+                            MessageBox.Show("Książka już znajduje się w koszyku.");
                             CartFlag = true;
                             break;
                         }
                     }
-
-
                     if (CartFlag == false)
                     {
                         Global.CartTable.ImportRow(row);
@@ -210,11 +208,7 @@ namespace LibraryMSSQLExample
                         dataGridViewTest.DataSource = new BindingSource(Global.CartTable, null);
                     }
                 }
-
             }
-
-
-
         }
 
         private void buttonLogout_Click(object sender, EventArgs e)
@@ -233,6 +227,8 @@ namespace LibraryMSSQLExample
             buttonLogout.Visible = false;
             buttonCartManagement.Visible = false;
             buttonCartManagement.Enabled = false;
+            buttonAddBorrower.Visible = false;
+            buttonAddBorrower.Enabled = false;
 
         }
 
@@ -261,7 +257,7 @@ namespace LibraryMSSQLExample
                 }
                 MessageBox.Show(sqlQuery) ;
 
-                SqlConnection cnn = new SqlConnection(MakeConnectionString("DESKTOP-6DASI9L", "AdventureWorks2019", "sa", "123"));
+                SqlConnection cnn = new SqlConnection(MakeConnectionString(Global.dbMachine, Global.dbName, Global.dbLogin, Global.dbPass));
                 cnn.Open();
                 sqlQuery = "select * from Person.EmailAddress where (" + sqlQuery + ");";
                 //sqlDeleteQuery = "Delete from Person.EmailAddress where (" + sqlQuery + ");";
@@ -296,7 +292,7 @@ namespace LibraryMSSQLExample
         {
 
             this.Hide();
-            var formCart = new FormCart(this);
+            var formCart = new FormCart(this, Global.CartTable);
             formCart.ShowDialog();
         }
 
