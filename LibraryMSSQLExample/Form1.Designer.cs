@@ -46,8 +46,9 @@ namespace LibraryMSSQLExample
             this.buttonUpdate = new System.Windows.Forms.Button();
             this.buttonAddRecord = new System.Windows.Forms.Button();
             this.buttonDeleteRecord = new System.Windows.Forms.Button();
-            this.buttonCartManagement = new System.Windows.Forms.Button();
+            this.buttonBorrowManagement = new System.Windows.Forms.Button();
             this.buttonAddBorrower = new System.Windows.Forms.Button();
+            this.buttonReturnManagement = new System.Windows.Forms.Button();
             this.panelAdministrator.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTest)).BeginInit();
             this.SuspendLayout();
@@ -202,6 +203,7 @@ namespace LibraryMSSQLExample
             this.buttonUpdate.Text = "Aktualizuj rekord";
             this.buttonUpdate.UseVisualStyleBackColor = true;
             this.buttonUpdate.Visible = false;
+            this.buttonUpdate.Click += new System.EventHandler(this.buttonUpdate_Click);
             // 
             // buttonAddRecord
             // 
@@ -213,6 +215,7 @@ namespace LibraryMSSQLExample
             this.buttonAddRecord.Text = "Dodaj rekord";
             this.buttonAddRecord.UseVisualStyleBackColor = true;
             this.buttonAddRecord.Visible = false;
+            this.buttonAddRecord.Click += new System.EventHandler(this.buttonAddRecord_Click);
             // 
             // buttonDeleteRecord
             // 
@@ -226,16 +229,17 @@ namespace LibraryMSSQLExample
             this.buttonDeleteRecord.Visible = false;
             this.buttonDeleteRecord.Click += new System.EventHandler(this.buttonDeleteRecord_Click);
             // 
-            // buttonCartManagement
+            // buttonBorrowManagement
             // 
-            this.buttonCartManagement.Enabled = false;
-            this.buttonCartManagement.Location = new System.Drawing.Point(1133, 293);
-            this.buttonCartManagement.Name = "buttonCartManagement";
-            this.buttonCartManagement.Size = new System.Drawing.Size(154, 57);
-            this.buttonCartManagement.TabIndex = 23;
-            this.buttonCartManagement.Text = "Administracja rezerwacjami";
-            this.buttonCartManagement.UseVisualStyleBackColor = true;
-            this.buttonCartManagement.Visible = false;
+            this.buttonBorrowManagement.Enabled = false;
+            this.buttonBorrowManagement.Location = new System.Drawing.Point(1133, 293);
+            this.buttonBorrowManagement.Name = "buttonBorrowManagement";
+            this.buttonBorrowManagement.Size = new System.Drawing.Size(154, 57);
+            this.buttonBorrowManagement.TabIndex = 23;
+            this.buttonBorrowManagement.Text = "Administracja wypożyczeniami";
+            this.buttonBorrowManagement.UseVisualStyleBackColor = true;
+            this.buttonBorrowManagement.Visible = false;
+            this.buttonBorrowManagement.Click += new System.EventHandler(this.buttonBorrowManagement_Click);
             // 
             // buttonAddBorrower
             // 
@@ -249,13 +253,26 @@ namespace LibraryMSSQLExample
             this.buttonAddBorrower.Visible = false;
             this.buttonAddBorrower.Click += new System.EventHandler(this.buttonAddBorrower_Click);
             // 
+            // buttonReturnManagement
+            // 
+            this.buttonReturnManagement.Enabled = false;
+            this.buttonReturnManagement.Location = new System.Drawing.Point(1133, 371);
+            this.buttonReturnManagement.Name = "buttonReturnManagement";
+            this.buttonReturnManagement.Size = new System.Drawing.Size(153, 57);
+            this.buttonReturnManagement.TabIndex = 25;
+            this.buttonReturnManagement.Text = "Zwrot książek";
+            this.buttonReturnManagement.UseVisualStyleBackColor = true;
+            this.buttonReturnManagement.Visible = false;
+            this.buttonReturnManagement.Click += new System.EventHandler(this.buttonReturnManagement_Click);
+            // 
             // FormWelcome
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1299, 524);
+            this.Controls.Add(this.buttonReturnManagement);
             this.Controls.Add(this.buttonAddBorrower);
-            this.Controls.Add(this.buttonCartManagement);
+            this.Controls.Add(this.buttonBorrowManagement);
             this.Controls.Add(this.buttonDeleteRecord);
             this.Controls.Add(this.buttonAddRecord);
             this.Controls.Add(this.buttonUpdate);
@@ -268,7 +285,6 @@ namespace LibraryMSSQLExample
             this.Controls.Add(this.buttonBookSearch);
             this.Name = "FormWelcome";
             this.Text = "Aplikacja biblioteczna DSz";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.panelAdministrator.ResumeLayout(false);
             this.panelAdministrator.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTest)).EndInit();
@@ -295,8 +311,9 @@ namespace LibraryMSSQLExample
         private System.Windows.Forms.Button buttonAddRecord;
         private System.Windows.Forms.Button buttonDeleteRecord;
         private System.Windows.Forms.Button buttonLogout;
-        private System.Windows.Forms.Button buttonCartManagement;
+        private System.Windows.Forms.Button buttonBorrowManagement;
         private System.Windows.Forms.Button buttonAddBorrower;
+        private System.Windows.Forms.Button buttonReturnManagement;
     }
 }
 

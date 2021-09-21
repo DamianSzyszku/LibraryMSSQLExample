@@ -13,7 +13,8 @@ namespace LibraryMSSQLExample
 
         private Form CallingForm = null;
         private DataTable CartTable = null;
-        public FormCart(Form callingForm, DataTable cartTable) : this()
+
+            public FormCart(Form callingForm, DataTable cartTable) : this()
         {
             this.CallingForm = callingForm;
             this.CartTable = cartTable;
