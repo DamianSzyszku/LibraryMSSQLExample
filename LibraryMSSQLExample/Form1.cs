@@ -62,9 +62,10 @@ namespace LibraryMSSQLExample
                 command.Dispose();
                 cnn.Close();
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
                 MessageBox.Show("Nie udało się połączyć z bazą danych.");
+                MessageBox.Show(exception.ToString());
                 return;
             }
 
@@ -90,7 +91,7 @@ namespace LibraryMSSQLExample
 
                 while (dataReader.Read())
                 {
-                    numberOfRecords = numberOfRecords + dataReader.GetValue(0);
+                    numberOfRecords = dataReader.GetValue(0).ToString();
                 }
                 // Declination.
                 if (numberOfRecords.EndsWith('1') && numberOfRecords.Length == 1)
@@ -114,9 +115,10 @@ namespace LibraryMSSQLExample
                 cnn.Close();
 
             }
-            catch (Exception e)
+            catch (Exception exception)
             {
                 MessageBox.Show("Nie udało się połączyć z bazą danych.");
+                MessageBox.Show(exception.ToString());
                 return;
             }
         }
@@ -188,34 +190,37 @@ namespace LibraryMSSQLExample
         // Search for database entries
         private void buttonBookSearch_Click(object sender, EventArgs e)
         {
+            try
+            {
+                SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
+                cnn.Open();
 
-            SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
-            cnn.Open();
+                SqlCommand command;
+                string SearchString = textBoxSearchQuery.Text;
 
-            SqlCommand command;
-            string SearchString = textBoxSearchQuery.Text;
+                string sqlQuery = "select * from dbo.BOOKS where (TITLE like '%" + SearchString + "%' OR AUTHOR like '%" + SearchString + "%');";
+                command = new SqlCommand(sqlQuery, cnn);
 
-            //string sqlQuery = "select * from Person.EmailAddress where (EmailAddress like '%" + SearchString + "%');";
-            string sqlQuery = "select * from dbo.BOOKS where (TITLE like '%" + SearchString + "%' OR AUTHOR like '%" + SearchString + "%');";
-            command = new SqlCommand(sqlQuery, cnn);
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                DataTable table = new DataTable();
+                dataAdapter.Fill(table);
+                dataGridViewTest.DataSource = new BindingSource(table, null);
 
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-            DataTable table = new DataTable();
-            dataAdapter.Fill(table);
-            dataGridViewTest.DataSource = new BindingSource(table, null);
-
-            command.Dispose();
-            cnn.Close();
-            refreshRowCount();
-
-
+                command.Dispose();
+                cnn.Close();
+                refreshRowCount();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Nie udało się połączyć z bazą danych.");
+                MessageBox.Show(exception.ToString());
+                return;
+            }
         }
 
         // Add to cart selected books
         private void buttonAddToCart_Click(object sender, EventArgs e)
         {
-
-
             if (dataGridViewTest.CurrentCell == null)
             {
                 MessageBox.Show("wybierz komorke ktora chcesz dodac do koszyka wypozyczen");
@@ -231,6 +236,53 @@ namespace LibraryMSSQLExample
                 {
                     bool CartFlag = false;
                     int index = dataGridViewTest.CurrentCell.RowIndex;
+                    // Check if selected book is currently reserved or borrowed.
+                    try
+                    {
+                        SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
+                        SqlCommand command;
+                        string sqlQuery_reserved = "select * from dbo.RESERVATION where ISBN = '" + dataGridViewTest.Rows[index].Cells[0].Value.ToString() + "' and ACCEPTED = 0 and RETURNED = 0";
+
+                        cnn.Open();
+                        command = new SqlCommand(sqlQuery_reserved, cnn);
+                        SqlDataReader dataReader;
+                        dataReader = command.ExecuteReader();
+                        int counter = 0;
+                        while (dataReader.Read())
+                        {
+                            counter++;
+                        }
+                        command.Dispose();
+                        cnn.Close();
+                        if (counter > 0)
+                        {
+                            MessageBox.Show("Książka jest aktualnie zarezerwowana.");
+                            return;
+                        }
+                        string sqlQuery_borrowed = "select * from dbo.RESERVATION where ISBN = '" + dataGridViewTest.Rows[index].Cells[0].Value.ToString() + "' and ACCEPTED = '1' and RETURNED = '0'";
+
+                        cnn.Open();
+                        command = new SqlCommand(sqlQuery_borrowed, cnn);
+                        dataReader = command.ExecuteReader();
+                        while (dataReader.Read())
+                        {
+                            counter++;
+                        }
+                        command.Dispose();
+                        cnn.Close();
+                        if (counter > 0)
+                        {
+                            MessageBox.Show("Książka jest aktualnie wypożyczona.");
+                            return;
+                        }
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show(exception.ToString());
+                    }
+
+
+                    // If there are no reservations or borrows, then we can add to cart selected book.
                     DataRow row = Global.CartTable.NewRow();
                     row = (((DataRowView)dataGridViewTest.Rows[index].DataBoundItem).Row);
                     for (int j = 0; j < Global.CartTable.Rows.Count; j++)
@@ -247,7 +299,7 @@ namespace LibraryMSSQLExample
                     {
                         Global.CartTable.ImportRow(row);
 
-                        dataGridViewTest.DataSource = new BindingSource(Global.CartTable, null);
+                        //dataGridViewTest.DataSource = new BindingSource(Global.CartTable, null);
                     }
                 }
             }
@@ -318,25 +370,29 @@ namespace LibraryMSSQLExample
                 columnName = dataGridViewTest.Columns[0].Name.ToString();
                 sqlQuery = columnName + "='" + columnValue + "'";
 
-                MessageBox.Show(sqlQuery);
+                try
+                {
+                    SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
+                    cnn.Open();
+                    sqlDeleteQuery = "Delete from dbo.BOOKS where (" + sqlQuery + ");";
 
-                SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
-                cnn.Open();
-                //sqlQuery = "select * from Person.EmailAddress where (" + sqlQuery + ");";
-                //sqlQuery = "select *  from dbo.BOOKS where (" + sqlQuery + ");";
-                sqlDeleteQuery = "Delete from dbo.BOOKS where (" + sqlQuery + ");";
+                    SqlCommand command;
+                    command = new SqlCommand(sqlDeleteQuery, cnn);
+                    SqlDataReader dataReader = command.ExecuteReader();
 
-                SqlCommand command;
-                command = new SqlCommand(sqlDeleteQuery, cnn);
-                SqlDataReader dataReader = command.ExecuteReader();
+                    MessageBox.Show("Usunięto rekord. Aktualizacja listy");
+                    dataGridViewTest.Rows.Remove(dataGridViewTest.Rows[rowIndex]);
 
-                MessageBox.Show("Usunięto rekord. Aktualizacja listy");
-                dataGridViewTest.Rows.Remove(dataGridViewTest.Rows[rowIndex]);
-
-                command.Dispose();
-                cnn.Close();
-                refreshRowCount();
-
+                    command.Dispose();
+                    cnn.Close();
+                    refreshRowCount();
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show("Nie udało się połączyć z bazą danych.");
+                    MessageBox.Show(exception.ToString());
+                    return;
+                }
 
 
 

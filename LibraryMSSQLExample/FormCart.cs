@@ -62,12 +62,60 @@ namespace LibraryMSSQLExample
                 }
                 command.Dispose();
                 cnn.Close();
-                if (counter > 0)
+                if (counter == 0)
                 {
                     MessageBox.Show("Podany numer albumu nie znajduje się w bazie");
                     return;
                 }
 
+                // Get number of record in Reservation table to assign unique ID in this table.
+                sqlQuery = "select COUNT(*) from dbo.RESERVATION;";
+                cnn.Open();
+                command = new SqlCommand(sqlQuery, cnn);
+                dataReader = command.ExecuteReader();
+                string ID_string="";
+                int ID_int = 0;
+                while (dataReader.Read())
+                {
+                    ID_string = dataReader.GetValue(0).ToString();
+                    ID_int = int.Parse(ID_string);
+                }
+                command.Dispose();
+                cnn.Close();
+
+
+                // Album ID is correct, cart is not empty, we can reserve books.
+                try
+                {
+                    for (int j = 0; j < dataGridViewCart.Rows.Count; j++)
+                    {
+                        string ALBUM_ID = maskedTextBoxAlbumNumber.Text.ToString();
+                        string ISBN = dataGridViewCart.Rows[j].Cells[0].Value.ToString();
+                        ID_int++; 
+                        DateTime myDateTime = DateTime.Now;
+                        string sqlFormattedDate = myDateTime.ToString("yyyy-MM-dd");
+
+
+                        cnn.Open();
+                        sqlQuery = "INSERT INTO dbo.RESERVATION (ID,ALBUM_ID,ISBN,RESERVATION_DATE,RETURN_DATE,ACCEPTED,RETURNED)" +
+                                                    " VALUES('" + ID_int.ToString() + "','" + ALBUM_ID + "','" + ISBN + "',GETDATE(),null,0,0);";
+                        command = new SqlCommand(sqlQuery, cnn);
+                        dataReader = command.ExecuteReader();
+                        command.Dispose();
+                        cnn.Close();
+                    }
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.ToString());
+                    return;
+                }
+
+
+                MessageBox.Show("Zarezerwowano książki. Zgłoś się do punktu po odbiór.");
+                this.CartTable.Rows.Clear();
+                this.Close();
+                this.CallingForm.Show();
             }
         }
 

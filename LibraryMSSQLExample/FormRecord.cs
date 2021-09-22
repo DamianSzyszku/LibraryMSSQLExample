@@ -6,14 +6,17 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 using System.Data.SqlClient;
-
+using System.Linq.Expressions;
+using System.Text.RegularExpressions;
 
 namespace LibraryMSSQLExample
 {
+
+
     public partial class FormRecord : Form
     {
-        private Form CallingForm = null;
-        private String Mode = null;
+        private readonly Form CallingForm = null;
+        private readonly String Mode = null;
         private DataTable RecordTable = null;
 
         // Initialization of form, 4 modes are  taken into account. Controls are hide and inactive in different modes.
@@ -35,12 +38,16 @@ namespace LibraryMSSQLExample
                 buttonAcceptBorrow.Enabled = false;
                 buttonRejectBorrow.Visible = false;
                 buttonRejectBorrow.Enabled = false;
-                dataGridViewRecordManagement.DataSource = new BindingSource(this.RecordTable, null);
-                //var index = dataGridViewRecordManagement.Rows.Add();
+
+                // Task to do
+                dataGridViewRecordManagement.Columns.Add("ISBN", "ISBN");
+                dataGridViewRecordManagement.Columns.Add("TITLE", "TITLE");
+                dataGridViewRecordManagement.Columns.Add("AUTHOR", "AUTHOR");
+                dataGridViewRecordManagement.Rows.Add();
+                dataGridViewRecordManagement.AllowUserToAddRows = false;
                 dataGridViewRecordManagement.Rows[0].Cells["ISBN"].Value = "";
                 dataGridViewRecordManagement.Rows[0].Cells["TITLE"].Value = "";
                 dataGridViewRecordManagement.Rows[0].Cells["AUTHOR"].Value = "";
-
             }
             else if (Mode.Equals("Update"))
             {
@@ -72,18 +79,15 @@ namespace LibraryMSSQLExample
                 buttonRejectBorrow.Enabled = false;
 
                 // SQL connection, query borrows from database
-                SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
-                cnn.Open();
-                SqlCommand command;
-                string sqlQuery = "select * from dbo.RESERVATION;";
-                command = new SqlCommand(sqlQuery, cnn);
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                DataTable table = new DataTable();
-                dataAdapter.Fill(table);
-                dataGridViewRecordManagement.DataSource = new BindingSource(table, null);
-                command.Dispose();
-                cnn.Close();
-            }
+                try
+                {
+                    RefreshTable(1, 0);
+                }
+                    catch (Exception exception)
+                {
+                    MessageBox.Show(exception.ToString());
+                }
+        }
             else if (Mode.Equals("Borrow"))
             {
                 buttonUpdate.Visible = false;
@@ -98,17 +102,14 @@ namespace LibraryMSSQLExample
                 buttonRejectBorrow.Enabled = true;
 
                 // SQL connection, query reservations from database to accept or reject
-                SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
-                cnn.Open();
-                SqlCommand command;
-                string sqlQuery = "select * from dbo.RESERVATION;";
-                command = new SqlCommand(sqlQuery, cnn);
-                SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
-                DataTable table = new DataTable();
-                dataAdapter.Fill(table);
-                dataGridViewRecordManagement.DataSource = new BindingSource(table, null);
-                command.Dispose();
-                cnn.Close();
+                try
+                {
+                    RefreshTable(0, 0);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.ToString());
+                }
             }
             dataGridViewRecordManagement.AllowUserToAddRows = false;
         }
@@ -117,18 +118,16 @@ namespace LibraryMSSQLExample
             InitializeComponent();
         }
 
-
+        // Back to main form button
         private void buttonCancel_Click(object sender, EventArgs e)
         {
 
-            if (Mode.Equals("Update") || dataGridViewRecordManagement.Rows.Count > 0)
+            if (Mode.Equals("Update"))
             {
                 int index = dataGridViewRecordManagement.CurrentCell.RowIndex;
-                dataGridViewRecordManagement.Rows.Remove(dataGridViewRecordManagement.Rows[index]);
                 this.RecordTable.Rows[index].Delete();
                 this.RecordTable.AcceptChanges();
             }
-            
             this.Close();
             this.CallingForm.Show();
         }
@@ -144,7 +143,25 @@ namespace LibraryMSSQLExample
             }
             else
             {
-
+                try
+                {
+                    SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
+                    cnn.Open();
+                    SqlCommand command;
+                    int index = dataGridViewRecordManagement.CurrentCell.RowIndex;
+                    string sqlQuery = "UPDATE dbo.RESERVATION SET ACCEPTED = 1, RETURNED = 0 where ID = " + dataGridViewRecordManagement.Rows[index].Cells[0].Value.ToString() + ";";
+                    command = new SqlCommand(sqlQuery, cnn);
+                    SqlDataReader dataReader;
+                    dataReader = command.ExecuteReader();
+                    command.Dispose();
+                    cnn.Close();
+                    MessageBox.Show("Wypożyczenie zaakceptowane");
+                    RefreshTable(0, 0);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.ToString());
+                }
             }
         }
 
@@ -158,7 +175,25 @@ namespace LibraryMSSQLExample
             }
             else
             {
-
+                try
+                {
+                    SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
+                    cnn.Open();
+                    SqlCommand command;
+                    int index = dataGridViewRecordManagement.CurrentCell.RowIndex;
+                    string sqlQuery = "UPDATE dbo.RESERVATION SET ACCEPTED = 1, RETURNED = 1 where ID = " + dataGridViewRecordManagement.Rows[index].Cells[0].Value.ToString() + ";";
+                    command = new SqlCommand(sqlQuery, cnn);
+                    SqlDataReader dataReader;
+                    dataReader = command.ExecuteReader();
+                    command.Dispose();
+                    cnn.Close();
+                    MessageBox.Show("Wypożyczenie odrzucone");
+                    RefreshTable(0, 0);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.ToString());
+                }
             }
 
         }
@@ -168,13 +203,31 @@ namespace LibraryMSSQLExample
 
             if (dataGridViewRecordManagement.Rows.Count == 0)
             {
-                MessageBox.Show("Brak wypożyczeń do odrzucenia.");
+                MessageBox.Show("Brak wypożyczeń do akceptacji.");
                 this.Close();
                 this.CallingForm.Show();
             }
             else
             {
-
+                try
+                {
+                    SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
+                    cnn.Open();
+                    SqlCommand command;
+                    int index = dataGridViewRecordManagement.CurrentCell.RowIndex;
+                    string sqlQuery = "UPDATE dbo.RESERVATION SET RETURN_DATE =  GETDATE(), ACCEPTED = 1, RETURNED = 1 where ID = " + dataGridViewRecordManagement.Rows[index].Cells[0].Value.ToString() + ";";
+                    command = new SqlCommand(sqlQuery, cnn);
+                    SqlDataReader dataReader;
+                    dataReader = command.ExecuteReader();
+                    command.Dispose();
+                    cnn.Close();
+                    MessageBox.Show("Wypożyczenie zaakceptowane");
+                    RefreshTable(1, 0);
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.ToString());
+                }
             }
         }
 
@@ -212,19 +265,89 @@ namespace LibraryMSSQLExample
 
         private void buttonAdd_Click(object sender, EventArgs e)
         {
+            string ISBN = dataGridViewRecordManagement.Rows[0].Cells[0].Value.ToString();
+            string TITLE = dataGridViewRecordManagement.Rows[0].Cells[1].Value.ToString();
+            string AUTHOR = dataGridViewRecordManagement.Rows[0].Cells[2].Value.ToString();
             if (dataGridViewRecordManagement.Rows.Count == 0)
             {
                 MessageBox.Show("Uzupełnij dane.");
+                return;
             }
-            else
+            else if (ISBN.Length != 13 || !Regex.IsMatch(ISBN, "^[0-9]+$") )
             {
-                string ISBN = dataGridViewRecordManagement.Rows[0].Cells[0].Value.ToString();
-                string TITLE = dataGridViewRecordManagement.Rows[0].Cells[1].Value.ToString();
-                string AUTHOR = dataGridViewRecordManagement.Rows[0].Cells[2].Value.ToString();
+                MessageBox.Show("Numer ISBN składa się z 13 cyfr.");
+                return;
+            }
+            else if (Regex.IsMatch(AUTHOR, "^[0-9]+$") || AUTHOR.Length > 50)
+            {
+                MessageBox.Show("Pole autor nie może zawierać cyfr, maksymalna długość to 50 znaków.");
+                return;
+            }
+            else if (TITLE.Length > 50)
+            {
+                MessageBox.Show("Maksymalna długość tytułu to 50 znaków.");
+                return;
+            }
+
+            // Check if the ISBN number is unique
+            bool flagIsISBNUnique = false;
+            try
+            {
                 SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
                 cnn.Open();
                 SqlCommand command;
-                string sqlQuery = "INSERT INTO dbo.BOOKS (ISBN, TITLE, AUTHOR) VALUES (" + "," + "," + ")";
+                string sqlQuery = "select count(*) from dbo.BOOKS where ISBN='" + ISBN + "'";
+                command = new SqlCommand(sqlQuery, cnn);
+                SqlDataReader dataReader;
+                dataReader = command.ExecuteReader();
+                dataReader.Read();
+                if (dataReader.GetValue(0).ToString() == "0")
+                    flagIsISBNUnique = true;
+
+                command.Dispose();
+                cnn.Close();
+            }
+            catch (Exception exception)
+            {
+                MessageBox.Show(exception.ToString());
+                return;
+            }
+
+
+            if (flagIsISBNUnique)
+            {
+                SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
+                cnn.Open();
+                SqlCommand command;
+                string sqlQuery = "INSERT INTO dbo.BOOKS (ISBN, TITLE, AUTHOR) VALUES ('" + ISBN + "','" + TITLE + "','" + AUTHOR + "')";
+                command = new SqlCommand(sqlQuery, cnn);
+                command.ExecuteReader();
+
+                command.Dispose();
+                cnn.Close();
+                var result = MessageBox.Show("Dodano rekord. Czy chcesz dodać kolejny rekord?","",MessageBoxButtons.YesNo,MessageBoxIcon.Question);
+                if (result == DialogResult.No)
+                {
+                    this.Close();
+                    this.CallingForm.Show();
+                }
+            }
+            else
+            {
+                MessageBox.Show("Wprowadzony numer ISBN nie jest unikatowy. Proszę poprawić numer ISBN.");
+                return;
+            }
+        }
+
+        public void RefreshTable(int Accepted, int Returned)
+        {
+
+            try
+            {
+                SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
+                cnn.Open();
+                SqlCommand command;
+                string sqlQuery = "select ID,ALBUM_ID,ISBN,RESERVATION_DATE from dbo.RESERVATION where ACCEPTED = " + Accepted.ToString() + " and RETURNED = " + Returned.ToString() + ";";
                 command = new SqlCommand(sqlQuery, cnn);
                 SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
                 DataTable table = new DataTable();
@@ -233,6 +356,13 @@ namespace LibraryMSSQLExample
                 command.Dispose();
                 cnn.Close();
             }
+            catch (Exception exception)
+            {
+                MessageBox.Show("Nie udało się połączyć z bazą danych.");
+                MessageBox.Show(exception.ToString());
+                return;
+            }
+
         }
     }
 }
