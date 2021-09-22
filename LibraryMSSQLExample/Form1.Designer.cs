@@ -102,6 +102,7 @@ namespace LibraryMSSQLExample
             // 
             this.textBoxPassword.Location = new System.Drawing.Point(75, 108);
             this.textBoxPassword.Name = "textBoxPassword";
+            this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(125, 27);
             this.textBoxPassword.TabIndex = 8;
             // 

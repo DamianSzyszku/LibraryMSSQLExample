@@ -68,6 +68,7 @@ namespace LibraryMSSQLExample
             this.buttonAdd.TabIndex = 3;
             this.buttonAdd.Text = "Dodaj";
             this.buttonAdd.UseVisualStyleBackColor = true;
+            this.buttonAdd.Click += new System.EventHandler(this.buttonAdd_Click);
             // 
             // buttonUpdate
             // 
@@ -77,6 +78,7 @@ namespace LibraryMSSQLExample
             this.buttonUpdate.TabIndex = 4;
             this.buttonUpdate.Text = "Aktualizuj";
             this.buttonUpdate.UseVisualStyleBackColor = true;
+            this.buttonUpdate.Click += new System.EventHandler(this.buttonUpdate_Click);
             // 
             // buttonAcceptBorrow
             // 
@@ -106,6 +108,7 @@ namespace LibraryMSSQLExample
             this.buttonAcceptReturn.TabIndex = 7;
             this.buttonAcceptReturn.Text = "Akceptuj zwrot";
             this.buttonAcceptReturn.UseVisualStyleBackColor = true;
+            this.buttonAcceptReturn.Click += new System.EventHandler(this.buttonAcceptReturn_Click);
             // 
             // FormRecord
             // 

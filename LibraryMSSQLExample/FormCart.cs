@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using System.Data.SqlClient;
 
 namespace LibraryMSSQLExample
 {
@@ -44,12 +45,33 @@ namespace LibraryMSSQLExample
                 MessageBox.Show("Prosze wprowadzic 6 cyfrowy numer albumu");
             }
             else 
-            { 
-                // sprawdz czy uzytkownik istnieje, jezeli tak, to dokonaj rezerwacji
+            {
+                // Check album ID, if do not exist then return
+                SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
+                cnn.Open();
+                SqlCommand command;
+                string sqlQuery = "select * from dbo.BORROWER where ALBUM_ID = '" + maskedTextBoxAlbumNumber.Text.ToString() + "';";
+                command = new SqlCommand(sqlQuery, cnn);
+                SqlDataReader dataReader;
+                dataReader = command.ExecuteReader();
+
+                int counter = 0;
+                while (dataReader.Read())
+                {
+                    counter++;
+                }
+                command.Dispose();
+                cnn.Close();
+                if (counter > 0)
+                {
+                    MessageBox.Show("Podany numer albumu nie znajduje się w bazie");
+                    return;
+                }
 
             }
         }
 
+        // Remove record from cart
         private void buttonRemoveFromCart_Click(object sender, EventArgs e)
         {
             if (dataGridViewCart.CurrentCell == null)

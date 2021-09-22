@@ -42,7 +42,8 @@ namespace LibraryMSSQLExample
 
             SqlCommand command;
 
-            string sqlQuery = "select * from Person.EmailAddress where (EmailAddress like '%michael12%');";
+            //string sqlQuery = "select * from Person.EmailAddress where (EmailAddress like '%michael12%');";
+            string sqlQuery = "select * from dbo.BOOKS where (ISBN like '3454980000010');";
             command = new SqlCommand(sqlQuery, cnn);
 
             SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
@@ -74,7 +75,8 @@ namespace LibraryMSSQLExample
             String sqlQuery, numberOfRecords = "";
 
             // Count and assign number of records to numberOfRecords
-            sqlQuery = "select COUNT(*) from Person.EmailAddress;";
+            //sqlQuery = "select COUNT(*) from Person.EmailAddress;";
+            sqlQuery = "select COUNT(*) from dbo.BOOKS;";
             command = new SqlCommand(sqlQuery, cnn);
             dataReader = command.ExecuteReader();
 
@@ -120,7 +122,7 @@ namespace LibraryMSSQLExample
                 textBoxLogin.Text = "";
                 textBoxPassword.Text = "";
             }
-            else if (textBoxLogin.Text.Equals("root") || textBoxPassword.Text.Equals("root"))
+            else if (textBoxLogin.Text.Equals("root") && textBoxPassword.Text.Equals("root"))
             {
                 buttonAddRecord.Visible = true;
                 buttonAddRecord.Enabled = true;
@@ -164,6 +166,8 @@ namespace LibraryMSSQLExample
             buttonReturnManagement.Enabled = false;
             buttonAddBorrower.Visible = false;
             buttonAddBorrower.Enabled = false;
+            textBoxLogin.Text = "";
+            textBoxPassword.Text = "";
 
         }
 
@@ -179,7 +183,8 @@ namespace LibraryMSSQLExample
             SqlCommand command;
             string SearchString = textBoxSearchQuery.Text;
 
-            string sqlQuery = "select * from Person.EmailAddress where (EmailAddress like '%" + SearchString + "%');";
+            //string sqlQuery = "select * from Person.EmailAddress where (EmailAddress like '%" + SearchString + "%');";
+            string sqlQuery = "select * from dbo.BOOKS where (TITLE like '%" + SearchString + "%' OR AUTHOR like '%" + SearchString + "%');";
             command = new SqlCommand(sqlQuery, cnn);
 
             SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
@@ -189,6 +194,7 @@ namespace LibraryMSSQLExample
 
             command.Dispose();
             cnn.Close();
+            refreshRowCount();
 
 
         }
@@ -215,10 +221,10 @@ namespace LibraryMSSQLExample
                     int index = dataGridViewTest.CurrentCell.RowIndex;
                     DataRow row = Global.CartTable.NewRow();
                     row = (((DataRowView)dataGridViewTest.Rows[index].DataBoundItem).Row);
-                    for (int j = 1; j < Global.CartTable.Rows.Count; j++)
+                    for (int j = 0; j < Global.CartTable.Rows.Count; j++)
                     {
                         // numeration begins with 1, why?
-                        if (Global.CartTable.Rows[j].ItemArray[3].Equals(row.ItemArray[3]))
+                        if (Global.CartTable.Rows[j].ItemArray[0].Equals(row.ItemArray[0]))
                         {
                             MessageBox.Show("Książka już znajduje się w koszyku.");
                             CartFlag = true;
@@ -294,48 +300,32 @@ namespace LibraryMSSQLExample
             else
             {
                 int rowIndex = dataGridViewTest.CurrentCell.RowIndex;
-                string sqlQuery = "", columnName, columnValue;
+                string sqlQuery, columnName, columnValue, sqlDeleteQuery;
 
-                //for (int i = 0; i < dataGridViewTest.CurrentRow.Cells.Count; i++)
-                for (int i = 0; i < 3; i++)
-                {
-                    columnValue = dataGridViewTest.Rows[rowIndex].Cells[i].Value.ToString();
-                    columnName = dataGridViewTest.Columns[i].Name.ToString();
-                    //if (i == dataGridViewTest.CurrentRow.Cells.Count - 1)
-                    if (i == 2)
-                        sqlQuery = sqlQuery + columnName + "='" + columnValue + "'";
-                    else
-                        sqlQuery = sqlQuery + columnName + "='" + columnValue + "' and ";
+                columnValue = dataGridViewTest.Rows[rowIndex].Cells[0].Value.ToString();
+                columnName = dataGridViewTest.Columns[0].Name.ToString();
+                sqlQuery = columnName + "='" + columnValue + "'";
 
-                }
                 MessageBox.Show(sqlQuery);
 
                 SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
                 cnn.Open();
-                sqlQuery = "select * from Person.EmailAddress where (" + sqlQuery + ");";
-                //sqlDeleteQuery = "Delete from Person.EmailAddress where (" + sqlQuery + ");";
+                //sqlQuery = "select * from Person.EmailAddress where (" + sqlQuery + ");";
+                //sqlQuery = "select *  from dbo.BOOKS where (" + sqlQuery + ");";
+                sqlDeleteQuery = "Delete from dbo.BOOKS where (" + sqlQuery + ");";
 
                 SqlCommand command;
-                command = new SqlCommand(sqlQuery, cnn);
+                command = new SqlCommand(sqlDeleteQuery, cnn);
                 SqlDataReader dataReader = command.ExecuteReader();
-                int counter = 0;
-                while (dataReader.Read())
-                {
-                    counter++;
-                }
-                if (counter == 1)
-                {
 
-                    MessageBox.Show("Usunięto rekord. Aktualizacja listy");
-                    dataGridViewTest.Rows.Remove(dataGridViewTest.Rows[rowIndex]);
-                }
-                else
-                {
-                    MessageBox.Show("Znaleziono więcej niż jeden rekord.");
-                }
+                MessageBox.Show("Usunięto rekord. Aktualizacja listy");
+                dataGridViewTest.Rows.Remove(dataGridViewTest.Rows[rowIndex]);
 
                 command.Dispose();
                 cnn.Close();
+                refreshRowCount();
+
+
 
 
             }
