@@ -36,77 +36,89 @@ namespace LibraryMSSQLExample
         // Initialize global CartTable using sql query. 
         public void MakeCartTable()
         {
-            
-            SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
-            cnn.Open();
 
-            SqlCommand command;
+            try
+            {
+                SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
+                cnn.Open();
 
-            //string sqlQuery = "select * from Person.EmailAddress where (EmailAddress like '%michael12%');";
-            string sqlQuery = "select * from dbo.BOOKS where (ISBN like '3454980000010');";
-            command = new SqlCommand(sqlQuery, cnn);
+                SqlCommand command;
 
-            SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+                //string sqlQuery = "select * from Person.EmailAddress where (EmailAddress like '%michael12%');";
+                string sqlQuery = "select * from dbo.BOOKS where (ISBN like '3454980000010');";
+                command = new SqlCommand(sqlQuery, cnn);
 
-            dataAdapter.Fill(Global.CartTable);
-            Global.CartTable.Rows[0].Delete();
-            Global.CartTable.AcceptChanges();
+                SqlDataAdapter dataAdapter = new SqlDataAdapter(command);
+
+                dataAdapter.Fill(Global.CartTable);
+                Global.CartTable.Rows[0].Delete();
+                Global.CartTable.AcceptChanges();
 
 
-            dataAdapter.Fill(Global.RecordTable);
-            Global.RecordTable.Rows[0].Delete();
-            Global.RecordTable.AcceptChanges();
+                dataAdapter.Fill(Global.RecordTable);
+                Global.RecordTable.Rows[0].Delete();
+                Global.RecordTable.AcceptChanges();
 
-            command.Dispose();
-            cnn.Close();
+                command.Dispose();
+                cnn.Close();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("Nie udało się połączyć z bazą danych.");
+                return;
+            }
 
         }
 
         // Refresh number of rows in table. Useful when adding next record or delete existing.
         private void refreshRowCount()
         {
-            // Login to database if succeed, active buttons.
-            SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
-            cnn.Open();
-            //MessageBox.Show("Connection open!");
-
-            SqlCommand command;
-            SqlDataReader dataReader;
-            String sqlQuery, numberOfRecords = "";
-
-            // Count and assign number of records to numberOfRecords
-            //sqlQuery = "select COUNT(*) from Person.EmailAddress;";
-            sqlQuery = "select COUNT(*) from dbo.BOOKS;";
-            command = new SqlCommand(sqlQuery, cnn);
-            dataReader = command.ExecuteReader();
-
-            while (dataReader.Read())
+            try
             {
-                numberOfRecords = numberOfRecords + dataReader.GetValue(0);
+                // Login to database if succeed, active buttons.
+                SqlConnection cnn = new SqlConnection(dbCredentials.ConnectionString);
+                cnn.Open();
+
+                SqlCommand command;
+                SqlDataReader dataReader;
+                String sqlQuery, numberOfRecords = "";
+
+                // Count and assign number of records to numberOfRecords
+                sqlQuery = "select COUNT(*) from dbo.BOOKS;";
+                command = new SqlCommand(sqlQuery, cnn);
+                dataReader = command.ExecuteReader();
+
+                while (dataReader.Read())
+                {
+                    numberOfRecords = numberOfRecords + dataReader.GetValue(0);
+                }
+                // Declination.
+                if (numberOfRecords.EndsWith('1') && numberOfRecords.Length == 1)
+                {
+                    labelBookCount.Text = "W naszej bazie znajduje się " + numberOfRecords + " książka.";
+                }
+                else if (numberOfRecords.EndsWith('2') || numberOfRecords.EndsWith('3') || numberOfRecords.EndsWith('4'))
+                {
+                    labelBookCount.Text = "W naszej bazie znajdują się " + numberOfRecords + " książki.";
+                }
+                else
+                {
+                    labelBookCount.Text = "W naszej bazie znajduje się " + numberOfRecords + " książek.";
+                }
+                labelBookCount.Visible = true;
+
+
+                // Closing session
+                dataReader.Close();
+                command.Dispose();
+                cnn.Close();
+
             }
-            // Declination.
-            if (numberOfRecords.EndsWith('1') && numberOfRecords.Length == 1)
+            catch (Exception e)
             {
-                labelBookCount.Text = "W naszej bazie znajduje się " + numberOfRecords + " książka.";
+                MessageBox.Show("Nie udało się połączyć z bazą danych.");
+                return;
             }
-            else if (numberOfRecords.EndsWith('2') || numberOfRecords.EndsWith('3') || numberOfRecords.EndsWith('4'))
-            {
-                labelBookCount.Text = "W naszej bazie znajdują się " + numberOfRecords + " książki.";
-            }
-            else
-            {
-                labelBookCount.Text = "W naszej bazie znajduje się " + numberOfRecords + " książek.";
-            }
-            labelBookCount.Visible = true;
-
-
-            // Closing session
-            dataReader.Close();
-            command.Dispose();
-            cnn.Close();
-
-
-            cnn.Open();
         }
 
 
